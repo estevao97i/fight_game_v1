@@ -535,22 +535,26 @@ function restartGame() {
 // rect = área (em coordenadas virtuais) onde a animação é desenhada.
 // sm   = nome da State Machine no .riv (deixe null para tocar a timeline
 //        padrão — útil para validar o pipeline com um .riv genérico).
+// ===== INTERRUPTOR MESTRE =====
+// false -> renderiza os PLACEHOLDERS geométricos (os DOIS boxeadores).
+//          Use neste modo enquanto desenha as animações no editor Rive:
+//          os placeholders servem de referência de pose/posição/timing.
+// true  -> usa os .riv finais (assets/opponent.riv, assets/player.riv).
+// Em AMBOS os modos toda a estrutura do Rive permanece no código.
+const USE_RIVE = false;
+
 const RIVE_SLOTS_CFG = {
   opponent: {
-    // TESTE DE PIPELINE: usando um .riv genérico (sem State Machine) só para
-    // validar carregamento + compositing + escala. Para a arte final, troque
-    // por:  src: "assets/opponent.riv",  sm: "OppSM"
-    src: "assets/test.riv",
-    sm: null,
+    // Arte final do oponente (de frente, cintura p/ cima).
+    src: "assets/opponent.riv",
+    sm: "OppSM",
     rect: { x: CONFIG.VW / 2 - 95, y: 150, w: 190, h: 240 },
     quality: 3, // resolução interna = rect * quality (nitidez)
   },
   player: {
-    // TESTE DE PIPELINE (mesmo .riv genérico). Para a arte final, troque
-    // por:  src: "assets/player.riv",  sm: "PlayerSM"
-    // (Se o arquivo final não existir, este slot cai no PLACEHOLDER sozinho.)
-    src: "assets/test.riv",
-    sm: null,
+    // Arte final do jogador (1ª pessoa: luvas/ombros vistos de costas).
+    src: "assets/player.riv",
+    sm: "PlayerSM",
     rect: { x: CONFIG.VW / 2 - 135, y: 396, w: 270, h: 244 },
     quality: 3,
   },
@@ -700,6 +704,7 @@ function syncRive() {
 // Desenha o slot Rive no canvas principal (no espaço virtual).
 // Retorna true se desenhou (a render() do placeholder então é pulada).
 function drawRiveSlot(name, extraOffsetX) {
+  if (!USE_RIVE) return false; // modo placeholder: força os boxeadores geométricos
   const s = RIVE.slots[name];
   if (!s || !s.loaded || s.failed) return false;
   const r = s.cfg.rect;
@@ -709,9 +714,10 @@ function drawRiveSlot(name, extraOffsetX) {
 
 // Inicializa todas as instâncias (chamado no boot). Seguro se o Rive faltar.
 function initRive() {
+  try { window.RIVE = RIVE; } catch (e) {} // DEBUG: inspeção via console
+  if (!USE_RIVE) return;       // modo placeholder: nem carrega os .riv (sem 404)
   if (!RIVE.available) return; // sem runtime -> placeholders
   for (const name in RIVE_SLOTS_CFG) createRiveSlot(name, RIVE_SLOTS_CFG[name]);
-  try { window.RIVE = RIVE; } catch (e) {} // DEBUG: inspeção via console
 }
 
 
