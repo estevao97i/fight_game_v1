@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Mobile First: trava escala, impede zoom por toque duplo e habilita viewport vertical -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#111418" />
+  <title>Fight Game V1 — Protótipo de Mecânica</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!--
+    A interface inteira é desenhada DENTRO do canvas (HUD, lutadores e botões).
+    O canvas tem proporção vertical fixa (9:16) e escala para caber na tela.
+    Isso garante coordenadas previsíveis em qualquer dispositivo.
+  -->
+  <div id="stage">
+    <canvas id="game"></canvas>
+  </div>
+
+  <!--
+    Runtime web do Rive (renderer canvas2d). Expõe o global `rive`.
+    Carregado ANTES do game.js. Se falhar (offline), o jogo cai
+    automaticamente nos placeholders geométricos (fallback no game.js).
+  -->
+  <script src="https://unpkg.com/@rive-app/canvas"></script>
+  <script src="game.js"></script>
+</body>
+</html>

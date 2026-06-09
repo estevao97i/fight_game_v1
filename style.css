@@ -1,0 +1,43 @@
+/* =========================================================
+   RESET E LAYOUT MOBILE-FIRST
+   - Tela vertical, fundo escuro, sem scroll/seleção.
+   - O canvas é centralizado e escala mantendo proporção 9:16.
+   ========================================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent; /* remove flash azul no toque mobile */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #050608;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* impede o "pull to refresh" e o scroll de borracha no mobile */
+  overscroll-behavior: none;
+  touch-action: none;
+}
+
+#stage {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* O JS define width/height reais (resolução interna).
+   Aqui só garantimos que o elemento ocupe o espaço disponível. */
+#game {
+  display: block;
+  background: #111418;
+  touch-action: none; /* essencial: elimina o delay de 300ms e gestos de scroll */
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+}
